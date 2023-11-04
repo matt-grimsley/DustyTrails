@@ -1,6 +1,6 @@
 # DustyTrails
 Godot tutorial RPG
-https://dev.to/christinec_dev/lets-learn-godot-4-by-making-an-rpg-part-1-project-overview-setup-bgc
+https://oops-i-devd.gitbook.io/christinedevs/godot-tutorials/dusty-trails-rpg/tutorial
 
 Asset Credits:  
 https://inertsongs.itch.io/free-retro-sfx  
