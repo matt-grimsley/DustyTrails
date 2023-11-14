@@ -1,9 +1,11 @@
-[gd_scene load_steps=82 format=3 uid="uid://dry66fo2mbgk7"]
+[gd_scene load_steps=84 format=3 uid="uid://dry66fo2mbgk7"]
 
 [ext_resource type="Script" path="res://Scripts/Player.cs" id="1_w7bqw"]
 [ext_resource type="Texture2D" uid="uid://d0djok8y1fmuk" path="res://Assets/Player/Player Front Sheet.png" id="2_watfe"]
 [ext_resource type="Texture2D" uid="uid://bkn51u0pped7v" path="res://Assets/Player/Player Side Sheet.png" id="3_7f65w"]
 [ext_resource type="Texture2D" uid="uid://d2j6cf5ctielj" path="res://Assets/Player/Player Back Sheet.png" id="4_xjnlr"]
+[ext_resource type="Script" path="res://GUI/HealthBar.cs" id="5_nd5r5"]
+[ext_resource type="Script" path="res://GUI/StaminaBar.cs" id="6_2jyiy"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_047fo"]
 atlas = ExtResource("2_watfe")
@@ -605,5 +607,61 @@ shape = SubResource("CapsuleShape2D_8dx6u")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(-1, 3)
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="HealthBar" type="ColorRect" parent="UI"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = -25.0
+offset_right = 105.0
+offset_bottom = -15.0
+grow_vertical = 0
+color = Color(0.227451, 0.223529, 0.207843, 0.415686)
+script = ExtResource("5_nd5r5")
+
+[node name="Value" type="ColorRect" parent="UI/HealthBar"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -49.0
+offset_top = -4.0
+offset_right = 49.0
+offset_bottom = 4.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.666667, 0, 0.121569, 1)
+
+[node name="StaminaBar" type="ColorRect" parent="UI"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = -15.0
+offset_right = 105.0
+offset_bottom = -5.0
+grow_vertical = 0
+color = Color(0.227451, 0.223529, 0.207843, 0.415686)
+script = ExtResource("6_2jyiy")
+
+[node name="Value" type="ColorRect" parent="UI/StaminaBar"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -49.0
+offset_top = -4.0
+offset_right = 49.0
+offset_bottom = 4.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0.552941, 0.0235294, 1)
 
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="OnAnimatedSprite2DAnimationFinished"]

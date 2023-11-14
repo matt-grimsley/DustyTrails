@@ -5,15 +5,35 @@ public partial class Player : CharacterBody2D
 {
     [Export]
     public int Speed { get; set; } = 50;
+    [Signal]
+    public delegate void HealthUpdatedEventHandler(float health, float maxHealth);
+    [Signal]
+    public delegate void StaminaUpdatedEventHandler(float stamina, float maxStamina);
 
-    public bool IsAttacking = false;
+    public bool IsAttacking { get; set; } = false;
+
+    public float Health { get; set; } = 100;
+    public float MaxHealth { get; set; } = 100;
+    public float RegenHealth { get; set; } = 1;
+    public float Stamina { get; set; } = 100;
+    public float MaxStamina { get; set; } = 100;
+    public float RegenStamina { get; set; } = 5;
+
     public Vector2 NewDirection;
     public AnimatedSprite2D AnimatedSprite;
+    public HealthBar HealthBar;
+    public StaminaBar StaminaBar;
 
 
     public override void _Ready()
     {
         AnimatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+        HealthBar = GetNode<HealthBar>("UI/HealthBar");
+        StaminaBar = GetNode<StaminaBar>("UI/StaminaBar");
+
+        HealthUpdated += HealthBar.UpdateHealthUI;
+        StaminaUpdated += StaminaBar.UpdateStaminaUI;
+
     }
     public override void _Input(InputEvent @event)
     {
@@ -23,6 +43,7 @@ public partial class Player : CharacterBody2D
             AnimatedSprite.Play("attack_" + GetDirectionString());
         }
     }
+
     public override void _PhysicsProcess(double delta)
     {
         var direction = Vector2.Zero;
@@ -35,7 +56,15 @@ public partial class Player : CharacterBody2D
             direction = direction.Normalized();
 
         if (Input.IsActionPressed("ui_sprint"))
-            Speed = 100;
+        {
+            if (Stamina >= 25)
+            {
+                Speed = 100;
+                Stamina -= 5;
+                EmitSignal(SignalName.StaminaUpdated, Stamina, MaxStamina);
+            }
+
+        }
         else if (Input.IsActionJustReleased("ui_sprint"))
             Speed = 50;
 
@@ -48,7 +77,7 @@ public partial class Player : CharacterBody2D
         }
 
         if (!Input.IsAnythingPressed())
-            if(!IsAttacking)
+            if (!IsAttacking)
                 AnimatedSprite.Play("idle_" + GetDirectionString());
 
     }
@@ -98,5 +127,22 @@ public partial class Player : CharacterBody2D
         }
 
         return defaultDirection;
+    }
+
+    public override void _Process(double delta)
+    {
+        float updatedHealth = Mathf.Min(Health + RegenHealth * (float)delta, MaxHealth);
+        if (updatedHealth != Health)
+        {
+            Health = updatedHealth;
+            EmitSignal(SignalName.HealthUpdated, Health, MaxHealth);
+        }
+
+        float updatedStamina = Mathf.Min(Stamina + RegenStamina * (float)delta, MaxStamina);
+        if (updatedStamina != Stamina)
+        {
+            Stamina = updatedStamina;
+            EmitSignal(SignalName.StaminaUpdated, Stamina, MaxStamina);
+        }
     }
 }
